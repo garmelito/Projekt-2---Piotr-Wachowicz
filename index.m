@@ -18,9 +18,16 @@ T4=str2num(answer{5,1});
 T5=str2num(answer{6,1}); 
 T0=str2num(answer{7,1});
 
-numerWybranegoWymuszenia = menu('Wybierz wymuszenie', 'wymuszenie skokowe u(t)=1(t-10)', 'wymuszenie pulsowe u(t)=1(t-10)-1(t-11)');   
-
-sim('bezRegulatora',30+T0); 
+regulowany = menu('Czy uklad ma zawierac regulator PID?', 'tak', 'nie');
+switch (regulowany)
+    case 1
+        numerWybranegoWymuszenia = menu('Wybierz wymuszenie', 'wymuszenie skokowe u(t)=1(t-10)', 'wymuszenie pulsowe u(t)=1(t-10)-1(t-11)'); 
+        sim('zRegulatorem',100);
+    case 2
+        numerWybranegoWymuszenia = menu('Wybierz wymuszenie', 'wymuszenie skokowe u(t)=1(t-10)', 'wymuszenie pulsowe u(t)=1(t-10)-1(t-11)'); 
+        sim('bezRegulatora',100); 
+end
+  
 
 plot(ans.dane, '.-')
 xlabel('t(s)');
