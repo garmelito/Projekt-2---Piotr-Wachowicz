@@ -21,18 +21,18 @@ T0=str2num(answer{7,1});
 regulowany = menu('Czy uklad ma zawierac regulator PID?', 'tak', 'nie');
 switch (regulowany)
     case 1
-        numerWybranegoWymuszenia = menu('Wybierz wymuszenie i zak³ócenie', 'u(t)=1(t-10) z(t)=0', 'u(t)=1(t-10) z(t)=0.2*1(t-100)', 'u(t)=sin(0.01t)*1(t-10) z(t)=0', 'u(t)=sin(0.01t) z(t)=0.05[1(t)-cos(0.05t)]');
-        sim('zRegulatorem',500);
+        numerWybranegoWymuszenia = menu('Wybierz wymuszenie i zak³ócenie', 'u(t)=1(t-10) z(t)=0', 'u(t)=1(t-10) z(t)=0.2*1(t-100)', 'u(t)=sin(0.01t)); 
+        sim('zRegulatorem',100);
     case 2
         numerWybranegoWymuszenia = menu('Wybierz wymuszenie', 'wymuszenie skokowe u(t)=1(t-10)', 'wymuszenie pulsowe u(t)=1(t-10)-1(t-11)'); 
-        sim('bezRegulatora',500); 
+        sim('bezRegulatora',100); 
 end
   
 
 plot(ans.dane, '.-')
 xlabel('t(s)');
 ylabel('y(t)');
-legend('Syganl wymuszenia','Syganl odpowiedzi','Zak³ócenie', 'Sterowanie');
+legend('Syganl wymuszenia','Syganl odpowiedzi');
 
 [down up] = limits(ans.dane);
 ylim([down up]);
