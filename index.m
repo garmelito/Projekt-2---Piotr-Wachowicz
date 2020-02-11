@@ -1,9 +1,10 @@
 clear;
+format long;
 
 prompt={'k:','T_1:','T_2:','T_3:','T_4:','T_5:','T_0:'};
 name='Input';
 numlines=1;
-defaultanswer={'1','-1','2','3','5','5','9'}; 
+defaultanswer={'1','-1','2','3','5','5','0'}; 
 options.Resize='on';
 options.WindowStyle='normal';
 options.Interpreter='tex';
@@ -18,21 +19,38 @@ T4=str2num(answer{5,1});
 T5=str2num(answer{6,1}); 
 T0=str2num(answer{7,1});
 
-regulowany = menu('Czy uklad ma zawierac regulator PID?', 'tak', 'nie');
-switch (regulowany)
-    case 1
-        numerWybranegoWymuszenia = menu('Wybierz wymuszenie i zak³ócenie', 'u(t)=1(t-10) z(t)=0', 'u(t)=1(t-10) z(t)=0.2*1(t-100)', 'u(t)=sin(0.01t)*1(t-10) z(t)=0', 'u(t)=sin(0.01t) z(t)=0.05[1(t)-cos(0.05t)]');
-        sim('zRegulatorem',500);
-    case 2
-        numerWybranegoWymuszenia = menu('Wybierz wymuszenie', 'wymuszenie skokowe u(t)=1(t-10)', 'wymuszenie pulsowe u(t)=1(t-10)-1(t-11)'); 
-        sim('bezRegulatora',500); 
+kLower=12;
+kUpper=20;
+
+for numerSymulacji=1:20
+    kR = (kLower + kUpper)/2
+    sim('zRegulatorem',100);
+
+    x = (0:.1:100)';
+    tsdata = getdatasamples(ans.dane,1:1001);
+    y = tsdata(:,2);
+    [PKS,LOCS] = findpeaks(y,x);
+    last = length(PKS);
+
+    if PKS(last) < PKS(2)
+        kLower = kLower + (kUpper-kLower)/2;
+    else
+        if PKS(last) > PKS(2)
+            kUpper = kUpper - (kUpper-kLower)/2;
+        end
+    end
 end
-  
+kR
+Tosc = LOCS(3) - LOCS(2)
+
+kZN = 0.6*kR
+kiZN = 1/(0.5*Tosc)
+kdZN = 1/(0.12*Tosc)
 
 plot(ans.dane, '.-')
 xlabel('t(s)');
 ylabel('y(t)');
-legend('Syganl wymuszenia','Syganl odpowiedzi','Zak³ócenie', 'Sterowanie');
+legend('Syganl wymuszenia','Syganl odpowiedzi');
 
 [down up] = limits(ans.dane);
 ylim([down up]);
