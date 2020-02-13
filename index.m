@@ -19,15 +19,19 @@ T4=str2num(answer{5,1});
 T5=str2num(answer{6,1}); 
 T0=str2num(answer{7,1});
 
+Tsymulacji = 100;
+Tp = 0.1;
+numberOfDataSamples = Tsymulacji / Tp + 1;
+
 kLower=12;
 kUpper=20;
 
 for numerSymulacji=1:20
     kR = (kLower + kUpper)/2
-    sim('zRegulatorem',100);
+    sim('zRegulatorem',Tsymulacji);
 
     x = (0:.1:100)';
-    tsdata = getdatasamples(ans.dane,1:1001);
+    tsdata = getdatasamples(ans.dane,1:numberOfDataSamples);
     y = tsdata(:,2);
     [PKS,LOCS] = findpeaks(y,x);
     last = length(PKS);
@@ -35,9 +39,7 @@ for numerSymulacji=1:20
     if PKS(last) < PKS(2)
         kLower = kLower + (kUpper-kLower)/2;
     else
-        if PKS(last) > PKS(2)
-            kUpper = kUpper - (kUpper-kLower)/2;
-        end
+        kUpper = kUpper - (kUpper-kLower)/2;
     end
 end
 kR
