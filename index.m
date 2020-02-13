@@ -4,7 +4,7 @@ format long;
 prompt={'k:','T_1:','T_2:','T_3:','T_4:','T_5:','T_0:'};
 name='Input';
 numlines=1;
-defaultanswer={'1','-1','2','3','5','5','0'}; 
+defaultanswer={'1','-1','2','3','5','5','9'}; 
 options.Resize='on';
 options.WindowStyle='normal';
 options.Interpreter='tex';
@@ -19,18 +19,18 @@ T4=str2num(answer{5,1});
 T5=str2num(answer{6,1}); 
 T0=str2num(answer{7,1});
 
-Tsymulacji = 100;
+Tsymulacji = 500;
 Tp = 0.1;
 numberOfDataSamples = Tsymulacji / Tp + 1;
 
-kLower=12;
-kUpper=20;
+kLower=1;
+kUpper=2;
 
 for numerSymulacji=1:20
     kR = (kLower + kUpper)/2
     sim('zRegulatorem',Tsymulacji);
 
-    x = (0:.1:100)';
+    x = (0:Tp:Tsymulacji)';
     tsdata = getdatasamples(ans.dane,1:numberOfDataSamples);
     y = tsdata(:,2);
     [PKS,LOCS] = findpeaks(y,x);
