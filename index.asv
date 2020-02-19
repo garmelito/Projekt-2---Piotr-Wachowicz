@@ -23,14 +23,12 @@ Tsymulacji = 500;
 Tp = 0.1;
 numberOfDataSamples = Tsymulacji / Tp + 1;
 
-kLower=0.1;
-kUpper=0.2;
+kLower=10;
+kUpper=20;
 niedobraneGranice = true;
-%kolejne iteracje wykonaja sie tylko jesli spelni sie przynajmniej jeden z warunkow
-%wewnatrz petli
 while niedobraneGranice
     niedobraneGranice = false;
-    kR = kLower;
+    kR = kLower
     sim('zRegulatorem',Tsymulacji);    
     x = (0:Tp:Tsymulacji)';
     tsdata = getdatasamples(ans.dane,1:numberOfDataSamples);
@@ -38,12 +36,11 @@ while niedobraneGranice
     [PKS,LOCS] = findpeaks(y,x);
     last = length(PKS);
     if PKS(last) > PKS(2)
-        kUpper = kLower;
         kLower = kLower / 2;
         niedobraneGranice = true;
     end
     
-    kR = kUpper;
+    kR = kUpper
     sim('zRegulatorem',Tsymulacji);    
     x = (0:Tp:Tsymulacji)';
     tsdata = getdatasamples(ans.dane,1:numberOfDataSamples);
@@ -51,16 +48,12 @@ while niedobraneGranice
     [PKS,LOCS] = findpeaks(y,x);
     last = length(PKS);
     if PKS(last) < PKS(2)
-        kLower = kUpper;
         kUpper = kUpper * 2;
         niedobraneGranice = true;
     end
 end
 
-% kLower
-% kUpper
-
-for numerSymulacji=1:20
+for numerSymulacji=1:5
     kR = (kLower + kUpper)/2
     sim('zRegulatorem',Tsymulacji);
 
